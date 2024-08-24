@@ -1,0 +1,73 @@
+/* 전체 컨테이너 */
+.cams-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    /* 전체 화면 높이 */
+    padding: 20px;
+    background-color: white;
+}
+
+/* 페이지 상단 제목 */
+.header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.header-title {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.back-button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    left: 20px;
+}
+
+/* 메인 콘텐츠 영역 */
+.content {
+    text-align: center;
+    margin-top: 50px;
+    /* 콘텐츠를 화면 중간으로 위치 */
+}
+
+.content-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.content-description {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+/* 사진 올리기 버튼 */
+.upload-button {
+    background-color: #16ce1c;
+    color: white;
+    font-size: 18px;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+}
+
+.upload-button:hover {
+    background-color: #218838;
+    /* 호버 시 버튼 색상 변경 */
+}
