@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // React Router의 useNavigate 훅 임포트
-import './style.css'; // 이 파일에 CSS 추가
+import { useNavigate } from 'react-router-dom';
+import './style.css';
 
 export const Home = () => {
-  const [searchType, setSearchType] = useState('nickname'); // 검색 유형 상태 관리
-  const [dropdownOpen, setDropdownOpen] = useState(false);  // 드롭다운 상태 관리
-  const navigate = useNavigate(); // 네비게이션 훅 초기화
+  const [searchType, setSearchType] = useState('nickname');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [results, setResults] = useState([]);
+  const [expandedItem, setExpandedItem] = useState(null); // 현재 확장된 항목의 상태
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadNaverMapScript = () => {
@@ -18,20 +21,18 @@ export const Home = () => {
           script.onload = resolve;
           script.onerror = reject;
           document.head.appendChild(script);
-          console.log("Naver Map script loaded");
         }
       });
     };
 
     const initializeMap = () => {
       const mapOptions = {
-        center: new window.naver.maps.LatLng(37.5132612, 127.1001336), // 쿠팡 본사
+        center: new window.naver.maps.LatLng(37.5132, 127.1001),
         zoom: 17,
       };
 
       const map = new window.naver.maps.Map('map', mapOptions);
-
-      return map; // 초기화된 지도를 반환
+      return map;
     };
 
     const addCurrentLocationMarker = (map) => {
@@ -43,20 +44,16 @@ export const Home = () => {
               position.coords.longitude
             );
 
-            console.log('현재 위치:', userLocation);
-
-            // 현재 위치에 빨간 마커 추가
             new window.naver.maps.Marker({
               position: userLocation,
               map: map,
               icon: {
-                url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png', // 빨간색 마커
+                url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
                 size: new window.naver.maps.Size(24, 24),
                 scaledSize: new window.naver.maps.Size(24, 24),
               }
             });
 
-            // 지도 중심을 현재 위치로 이동
             map.setCenter(userLocation);
           },
           (error) => {
@@ -73,7 +70,7 @@ export const Home = () => {
     loadNaverMapScript()
       .then(() => {
         const map = initializeMap();
-        addCurrentLocationMarker(map); // 현재 위치에 마커 추가
+        addCurrentLocationMarker(map);
       })
       .catch((err) => {
         console.error('네이버 지도 API 로드 실패:', err);
@@ -84,15 +81,48 @@ export const Home = () => {
     };
   }, []);
 
-  // 드롭다운 메뉴에서 선택하는 함수
   const handleSelect = (type) => {
     setSearchType(type);
-    setDropdownOpen(false); // 선택 후 드롭다운 닫기
+    setDropdownOpen(false);
   };
 
-  // 버튼 클릭 시 cams.jsx로 네비게이션하는 함수
   const handleNavigate = () => {
     navigate('/cams');
+  };
+
+  const handleSearch = async () => {
+    if (!searchTerm) return;
+
+    const endpoint = searchType === 'plant' ? 'plantname' : 'nickname';
+    
+    try {
+      const response = await fetch(`http://localhost:5001/${endpoint}?query=${searchTerm}`);
+      const data = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error('검색 중 오류 발생:', error);
+    }
+  };
+
+  const handleItemClick = async (index) => {
+    if (expandedItem === index) {
+      setExpandedItem(null); // 이미 확장된 항목을 다시 클릭하면 축소
+    } else {
+      setExpandedItem(index); // 항목을 확장
+      const endpoint = searchType === 'plant' ? 'plantname' : 'nickname';
+      
+      try {
+        const response = await fetch(`http://localhost:5001/${endpoint}/${results[index].id}`);
+        const data = await response.json();
+        setResults(prevResults => {
+          const newResults = [...prevResults];
+          newResults[index] = { ...newResults[index], ...data };
+          return newResults;
+        });
+      } catch (error) {
+        console.error('세부 정보 로드 중 오류 발생:', error);
+      }
+    }
   };
 
   return (
@@ -103,7 +133,12 @@ export const Home = () => {
           type="text"
           placeholder={searchType === 'plant' ? '식물을 검색해 보세요!' : '닉네임을 검색해 보세요!'}
           className="search-box"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <button className="search-button" onClick={handleSearch}>
+          검색
+        </button>
         <div className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
           <div className="triangle-icon"></div>
         </div>
@@ -123,11 +158,37 @@ export const Home = () => {
       <div className="map-container">
         <div id="map" className="small-map"></div>
 
+     
+
         {/* 지도 오른쪽 아래에 위치한 초록색 원형 버튼 */}
         <div className="floating-button" onClick={handleNavigate}>
           +
         </div>
       </div>
+   {/* 지도와 검색 결과 리스트 사이에 추가된 텍스트 */}
+   <div className="location-text">
+          해당 위치에 있는 식물 확인하기
+        </div>
+      {/* 검색 결과 리스트 */}
+      {results.length > 0 && (
+        <div className="results-list">
+          {results.map((item, index) => (
+            <div
+              key={index}
+              className={`result-item ${expandedItem === index ? 'expanded' : ''}`}
+              onClick={() => handleItemClick(index)}
+            >
+              {searchType === 'nickname' ? item.nickname : item.name}
+              {expandedItem === index && (
+                <div className="item-details">
+                  <img src={item.imageUrl} alt={item.name || item.nickname} className="item-image" />
+                  <p>{item.description}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
