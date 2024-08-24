@@ -1,20 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
-import photo from './photo.svg';
-import vector0 from './Vector - 0.svg';
-import vector from './Vector.svg';
-import group from './Group.png';
-import hwasall from './hwasall.svg';
-import hyunjae from './hyunjae.svg';
-import minus from './minus.svg';
+import photo from "./photo.svg";
+import vector from "./Vector.svg";
+import group from "./Group.png";
+import hwasall from "./hwasall.svg";
 
 export const Home = () => {
-
   const navigate = useNavigate();
+  const [prompt, setPrompt] = useState("");
+  const [results, setResults] = useState([]);
 
   const handleClick = () => {
-    navigate('/image-preview');
+    navigate("/image-preview");
+  };
+
+  const fetchSearchResults = async (prompt) => {
+    try {
+      const responses = await Promise.all([
+        fetch(`http://localhost:5001/ping?query=${prompt}`),
+        fetch(`http://localhost:5001/name?query=${prompt}`),
+        fetch(`http://localhost:5001/nickname?query=${prompt}`),
+      ]);
+  
+      const results = await Promise.all(responses.map((res) => res.json()));
+      
+      const uniqueResults = Array.from(new Set(results.flat().map(item => JSON.stringify(item))))
+                                  .map(item => JSON.parse(item));
+  
+      return uniqueResults;
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      return [];
+    }
+  };
+  
+  const handleSearch = async () => {
+    if (!prompt) return;
+
+    const results = await fetchSearchResults(prompt);
+    setResults(results);
   };
 
   return (
@@ -28,45 +53,33 @@ export const Home = () => {
             <div className="depth-frame-3" />
           </div>
           <div className="depth-frame-wrapper">
-            <div className="depth-frame-wrapper">
-              <div className="depth-frame-4">
-                <div className="depth-frame-5">
-                  <div className="depth-frame-6">
-                    <div className="depth-frame-7">
-                      <div className="vector-wrapper">
-                        <img className="vector" src={hwasall} alt="Vector" />
-                      </div>
+            <div className="depth-frame-4">
+              <div className="depth-frame-5">
+                <div className="depth-frame-6">
+                  <div className="depth-frame-7">
+                    <div className="vector-wrapper">
+                      <img className="vector" src={hwasall} alt="Vector" />
                     </div>
-                    <div className="depth-frame-8">
-                      <div className="text-wrapper-2">검색</div>
-                    </div>
+                  </div>
+                  <div className="depth-frame-8">
+                    <div className="text-wrapper-2">검색</div>
                   </div>
                 </div>
-                <div className="depth-frame-9">
-                  <div className="depth-frame-10">
-                    <div className="depth-frame-11">
-                      <div className="depth-frame-12">
-                        <div className="img-wrapper">
-                          <img className="img" src={vector0} alt="Vector" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="depth-frame-13">
-                      <div className="depth-frame-12">
-                        <div className="img-wrapper">
-                          <img className="vector-2" alt="Vector" src={minus} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="depth-frame-14">
-                    <div className="depth-frame-12">
-                      <div className="img-wrapper">
-                        <img className="vector-3" alt="Vector" src={hyunjae} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              </div>
+              <div className="depth-frame-9">
+                <input
+                  type="text"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="검색어를 입력하세요"
+                  style={{ width: '80%', padding: '10px', marginBottom: '10px' }} // 인라인 스타일 추가
+                />
+                <button 
+                  onClick={handleSearch} 
+                  style={{ width: '80%', padding: '10px' }} // 인라인 스타일 추가
+                >
+                  검색
+                </button>
               </div>
             </div>
           </div>
@@ -74,57 +87,23 @@ export const Home = () => {
             <div className="text-wrapper-3">Found Plants</div>
           </div>
           <div className="depth-frame-16">
-            <div className="depth-frame-17">
-              <div className="depth-frame-18">
-                <div className="depth-frame-19" />
-                <div className="depth-frame-20" />
-              </div>
-              <div className="depth-frame-21">
-                <div className="div">
-                  <div className="text-wrapper-4">Rosa californica</div>
-                </div>
-                <div className="depth-frame-22">
-                  <div className="text-wrapper-5">19 days ago</div>
+            {results.map((result, index) => (
+              <div key={index} className="depth-frame-17" style={{ width: '90%', margin: '5px 0', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}>
+                <div className="depth-frame-21">
+                  <div className="div">
+                    <div className="text-wrapper-4">{result.name}</div>
+                  </div>
+                  <div className="depth-frame-22">
+                    <div className="text-wrapper-5">{result.date}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="depth-frame-17">
-              <div className="depth-frame-23">
-                <div className="depth-frame-24" />
-                <div className="depth-frame-19" />
-                <div className="depth-frame-20" />
-              </div>
-              <div className="depth-frame-21">
-                <div className="div">
-                  <div className="text-wrapper-4">Baccharis pilularis</div>
-                </div>
-                <div className="depth-frame-22">
-                  <div className="text-wrapper-5">2 months ago</div>
-                </div>
-              </div>
-            </div>
-            <div className="depth-frame-17">
-              <div className="depth-frame-25">
-                <div className="depth-frame-24" />
-                <div className="depth-frame-19" />
-              </div>
-              <div className="depth-frame-21">
-                <div className="div">
-                  <div className="text-wrapper-4">Pseudotsuga menziesii</div>
-                </div>
-                <div className="depth-frame-22">
-                  <div className="text-wrapper-5">3 months ago</div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-        <div className="div">
-          <div className="depth-frame-26" />
-        </div>
-        <img className="vector-4" alt="Vector" src={vector} />
-        <img className="photo" src={photo} alt="Photo" onClick={handleClick} />
-        <img className="group" src={group} alt="Group" />
+        <img className="vector-4" alt="Vector" src={vector} style={{ maxWidth: '100%', height: 'auto' }} />
+        <img className="photo" src={photo} alt="Photo" onClick={handleClick} style={{ maxWidth: '100%', height: 'auto' }} />
+        <img className="group" src={group} alt="Group" style={{ maxWidth: '100%', height: 'auto' }} />
       </div>
     </div>
   );
