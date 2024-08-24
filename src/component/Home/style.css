@@ -1,445 +1,121 @@
-.home {
-  align-items: flex-start;
-  background-color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+/* 지도의 크기 조정 */
+.small-map {
+  width: 100%;
+  height: 100%;
 }
 
-.home .depth-frame {
-  align-items: flex-start;
-  align-self: stretch;
-  background-color: #ffffff;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  min-height: 844px;
+/* 지도와 버튼을 포함하는 컨테이너 */
+.map-container {
   position: relative;
   width: 100%;
+  height: 400px;
+  /* 지도의 높이 설정 */
 }
 
-.home .div {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-}
-
-.home .depth-frame-2 {
-  align-items: center;
-  align-self: stretch;
-  background-color: #ffffff;
-  display: flex;
-  flex: 0 0 auto;
-  justify-content: space-between;
-  padding: 16px 16px 8px;
-  position: relative;
-  width: 100%;
-}
-
-.home .div-wrapper {
-  align-items: center;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 0px 0px 0px 48px;
-  position: relative;
-}
-
-.home .text-wrapper {
-  align-self: stretch;
-  color: #111611;
-  font-family: "Lexend-Bold", Helvetica;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0;
-  line-height: 23px;
-  margin-top: -1px;
-  position: relative;
-  text-align: center;
-}
-
-.home .depth-frame-3 {
-  position: relative;
-  width: 48px;
-}
-
-.home .depth-frame-wrapper {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  flex-grow: 1;
-  position: relative;
-  width: 100%;
-}
-
-.home .depth-frame-4 {
-  align-self: stretch;
-  background-image: url(./depth-4-frame-0.png);
-  background-position: 50% 50%;
-  background-size: cover;
-  flex: 1;
-  flex-grow: 1;
-  min-height: 320px;
-  position: relative;
-  width: 100%;
-}
-
-.home .depth-frame-5 {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
+/* 검색 컨테이너 스타일링 */
+.search-container {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 358px;
   height: 48px;
-  left: 16px;
-  position: absolute;
-  top: 20px;
-  width: 358px;
-}
-
-.home .depth-frame-6 {
-  align-items: flex-start;
-  align-self: stretch;
-  border-radius: 12px;
   display: flex;
-  flex: 1;
-  flex-grow: 1;
-  position: relative;
-  width: 100%;
-}
-
-.home .depth-frame-7 {
   align-items: center;
-  align-self: stretch;
-  background-color: #ffffff;
-  border-radius: 12px 0px 0px 12px;
-  display: inline-flex;
-  flex: 0 0 auto;
-  justify-content: center;
-  padding: 0px 0px 0px 16px;
-  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 24px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
 
-.home .vector-wrapper {
-  flex: 1;
+/* 검색 박스 스타일링 */
+.search-box {
   flex-grow: 1;
-  height: 24px;
-  position: relative;
-}
-
-.home .vector {
-  height: 20px;
-  left: 2px;
-  position: absolute;
-  top: 2px;
-  width: 20px;
-}
-
-.home .depth-frame-8 {
-  align-items: center;
-  align-self: stretch;
-  background-color: #ffffff;
-  border-radius: 0px 12px 12px 0px;
-  display: flex;
-  flex: 1;
-  flex-grow: 1;
-  overflow: hidden;
-  padding: 8px 16px 8px 8px;
-  position: relative;
-}
-
-.home .text-wrapper-2 {
-  color: #000000;
-  font-family: "Lexend-Regular", Helvetica;
+  padding: 10px;
   font-size: 16px;
-  font-weight: 400;
-  height: 22px;
-  letter-spacing: 0;
-  line-height: 24px;
-  position: relative;
-  white-space: nowrap;
-  width: 225px;
+  border: none;
+  outline: none;
+  border-radius: 24px 0 0 24px;
 }
 
-.home .depth-frame-9 {
-  align-items: flex-end;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  left: 16px;
-  position: absolute;
-  top: 170px;
-  width: 358px;
-}
-
-.home .depth-frame-10 {
-  align-items: flex-start;
-  display: inline-flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  gap: 2px;
-  position: relative;
-}
-
-.home .depth-frame-11 {
-  align-items: center;
-  background-color: #ffffff;
-  border-radius: 12px 12px 0px 0px;
-  box-shadow: 0px 2px 4px #0000001a;
-  display: flex;
-  height: 40px;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-  width: 40px;
-}
-
-.home .depth-frame-12 {
-  align-items: center;
-  display: inline-flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  position: relative;
-}
-
-.home .img-wrapper {
-  flex: 1;
-  flex-grow: 1;
-  position: relative;
-  width: 24px;
-}
-
-.home .img {
-  height: 18px;
-  left: 3px;
-  position: absolute;
-  top: 3px;
-  width: 18px;
-}
-
-.home .depth-frame-13 {
-  align-items: center;
-  background-color: #ffffff;
-  border-radius: 0px 0px 12px 12px;
-  box-shadow: 0px 2px 4px #0000001a;
-  display: flex;
-  height: 40px;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-  width: 40px;
-}
-
-.home .vector-2 {
-  height: 2px;
-  left: 3px;
-  position: absolute;
-  top: 11px;
-  width: 18px;
-}
-
-.home .depth-frame-14 {
-  align-items: center;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0px 2px 4px #0000001a;
-  display: flex;
-  height: 40px;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-  width: 40px;
-}
-
-.home .vector-3 {
-  height: 19px;
-  left: 3px;
-  position: absolute;
-  top: 3px;
-  width: 19px;
-}
-
-.home .depth-frame-15 {
-  align-items: center;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  padding: 8px 16px;
-  position: relative;
-  width: 100%;
-}
-
-.home .text-wrapper-3 {
-  align-self: stretch;
-  color: #638763;
-  font-family: "Lexend-Bold", Helvetica;
+/* 드롭다운 토글 버튼 스타일링 */
+.dropdown-toggle {
+  padding: 10px 15px;
+  cursor: pointer;
   font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0;
-  line-height: 21px;
-  margin-top: -1px;
-  position: relative;
-  text-align: center;
-}
-
-.home .depth-frame-16 {
-  align-items: flex-start;
-  align-self: stretch;
+  background-color: white;
+  border-radius: 0 24px 24px 0;
+  transition: background-color 0.3s;
   display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  gap: 8px;
-  padding: 0px 16px;
-  position: relative;
-  width: 100%;
-}
-
-.home .depth-frame-17 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 1;
-  flex-grow: 1;
-  gap: 8px;
-  position: relative;
-  width: 100%;
-}
-
-.home .depth-frame-18 {
   align-items: center;
-  align-self: stretch;
+}
+
+.dropdown-toggle:hover {
+  background-color: #e0e0e0;
+}
+
+/* 역삼각형 아이콘 스타일링 */
+.triangle-icon {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #000;
+}
+
+/* 드롭다운 메뉴 스타일링 */
+.dropdown-menu {
+  position: absolute;
+  top: 48px;
+  /* 검색 박스 아래에 드롭다운 메뉴를 배치 */
+  right: 0;
+  width: 150px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  /* 드롭다운 메뉴가 항상 위에 표시되도록 설정 */
+}
+
+/* 드롭다운 아이템 스타일링 */
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* 지도 오른쪽 아래에 위치한 초록색 원형 버튼 스타일링 */
+.floating-button {
+  position: absolute;
+  bottom: 20px;
+  /* 지도 아래에서 20px 위에 위치 */
+  right: 20px;
+  /* 지도 오른쪽에서 20px 왼쪽에 위치 */
+  width: 50px;
+  height: 50px;
+  background-color: #16ce1c;
+  /* 초록색 배경 */
+  color: white;
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 20px 0px 0px;
-  position: relative;
-  width: 40px;
-}
-
-.home .depth-frame-19 {
-  background-color: #111611;
-  border-radius: 4px;
-  height: 8px;
-  position: relative;
-  width: 8px;
-}
-
-.home .depth-frame-20 {
-  background-color: #dbe5db;
-  height: 40px;
-  margin-bottom: -5.33px;
-  position: relative;
-  width: 2px;
-}
-
-.home .depth-frame-21 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 12px 0px;
-  position: relative;
-}
-
-.home .text-wrapper-4 {
-  align-self: stretch;
-  color: #111611;
-  font-family: "Lexend-Medium", Helvetica;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 24px;
-  margin-top: -1px;
-  position: relative;
-}
-
-.home .depth-frame-22 {
-  align-items: flex-start;
-  align-self: stretch;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  margin-bottom: -5.33px;
-  position: relative;
-  width: 100%;
-}
-
-.home .text-wrapper-5 {
-  align-self: stretch;
-  color: #638763;
-  font-family: "Lexend-Regular", Helvetica;
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 24px;
-  margin-top: -1px;
-  position: relative;
-}
-
-.home .depth-frame-23 {
   align-items: center;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: relative;
-  width: 40px;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  /* 다른 요소들보다 위에 표시되도록 설정 */
+  transition: background-color 0.3s;
 }
 
-.home .depth-frame-24 {
-  background-color: #dbe5db;
-  height: 16px;
-  position: relative;
-  width: 2px;
-}
-
-.home .depth-frame-25 {
-  align-items: center;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 0px 0px 12px;
-  position: relative;
-  width: 40px;
-}
-
-.home .depth-frame-26 {
-  align-self: stretch;
-  background-color: #ffffff;
-  height: 20px;
-  position: relative;
-  width: 100%;
-}
-
-.home .vector-4 {
-  height: 28px;
-  left: 325px;
-  position: absolute;
-  top: 723px;
-  width: 34px;
-}
-
-.home .photo {
-  height: 40px;
-  left: 321px;
-  position: absolute;
-  top: 770px;
-  width: 42px;
-}
-
-.home .group {
-  height: 40px;
-  left: 325px;
-  position: absolute;
-  top: 661px;
-  width: 30px;
+.floating-button:hover {
+  background-color: #218838;
+  /* 호버 시 더 진한 초록색 */
 }

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Home } from './component/Home/Home.jsx'
 import { ImagePreview } from './component/ImagePreview/ImagePreview.jsx'
 import { ImageCheck } from './component/ImageCheck/ImageCheck.jsx'
-
+import { Cams } from './component/Cams/Cams.jsx'
 function App() {
 
 
@@ -13,6 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/image-preview" element={<ImagePreview />} />
         <Route path="/image-check" element={<ImageCheck />} />
+        <Route path="/cams" element={<Cams />} />
       </Routes>
     </Router>
   )
