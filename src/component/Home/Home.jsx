@@ -26,13 +26,15 @@ export const Home = () => {
 
     const initializeMap = () => {
       const mapOptions = {
-        center: new window.naver.maps.LatLng(37.5132, 127.1001),
+        center: new window.naver.maps.LatLng(37.5132, 127.1001), // 기본 위치 설정
         zoom: 17,
       };
 
       const map = new window.naver.maps.Map('map', mapOptions);
+      setMap(map);
       return map;
     };
+
 
     const addMarker = (map, location) => {
       new window.naver.maps.Marker({
@@ -54,6 +56,7 @@ export const Home = () => {
         if (data.isSuccess && data.result) {
           setResult(data.result);
           addMarker(map, data.result);
+
         } else {
           console.error('API 응답에 문제가 있습니다:', data.message);
         }
@@ -65,7 +68,9 @@ export const Home = () => {
     loadNaverMapScript()
       .then(() => {
         const map = initializeMap();
+
         fetchPlantDataAndAddMarker(map, 1);
+
       })
       .catch((err) => {
         console.error('네이버 지도 API 로드 실패:', err);
@@ -76,14 +81,10 @@ export const Home = () => {
     };
   }, []);
 
-  const handleSelect = (type) => {
-    setSearchType(type);
-    setDropdownOpen(false);
-  };
-
   const handleNavigate = () => {
     navigate('/cams');
   };
+
 
   const handleSearch = async () => {
     if (!searchTerm) return;
@@ -115,11 +116,12 @@ export const Home = () => {
       <div className="search-container">
         <input
           type="text"
+
           placeholder={searchType === 'plantName' ? '식물을 검색해 보세요!' : '닉네임을 검색해 보세요!'}
+
           className="search-box"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
         />
+
         <button className="search-button" onClick={handleSearch}>
           검색
         </button>
@@ -136,14 +138,17 @@ export const Home = () => {
             </div>
           </div>
         )}
+
       </div>
 
       <div className="map-container">
         <div id="map" className="small-map"></div>
+
         <div className="floating-button" onClick={handleNavigate}>
           +
         </div>
       </div>
+
       
       <div className="location-text">
         해당 위치에 있는 식물 확인하기
@@ -163,6 +168,7 @@ export const Home = () => {
           ))}
         </div>
       )}
+
     </div>
   );
 };

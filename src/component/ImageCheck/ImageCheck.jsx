@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import vector from "./back.svg";
+import { useNavigate, useLocation } from "react-router-dom";
+import vector from "./back.svg"; // SVG 파일 경로는 프로젝트에 맞게 수정
 import "./style.css";
 
 export const ImageCheck = () => {
   const [nickname, setNickname] = useState("");
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
   const navigate = useNavigate();
+  const state = useLocation().state;
+  const base64Image = state?.base64Image;
+  const plantInfo = state?.plantInfo;
 
   const adjectives = [
     "껑충 뛰는", "장난꾸러기인", "휘파람 부는", "보물찾기 하는", "깔깔 웃는", "비눗방울 터뜨리는",
@@ -32,13 +36,70 @@ export const ImageCheck = () => {
     setNickname(`${randomAdjective} ${randomNoun}`);
   };
 
+  const fetchLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          setLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Geolocation API 사용 권한이 없습니다.", error);
+          alert("위치 정보를 가져올 수 없습니다.");
+        }
+      );
+    } else {
+      alert("Geolocation API를 지원하지 않는 브라우저입니다.");
+    }
+  };
+
+  const handleSave = async () => {
+    if (!nickname || !location.latitude || !location.longitude) {
+      alert("닉네임 또는 위치 정보가 누락되었습니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://43.203.235.174:8080/plant/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageData: base64Image,
+          nickName: nickname,
+          longitude: location.longitude,
+          latitude: location.latitude,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Response status:', response.status);
+        throw new Error('Failed to save data');
+      }
+
+      const data = await response.json();
+      console.log('Server response:', data);
+
+      if (data.isSuccess) {
+        alert('식물 정보가 성공적으로 저장되었습니다.');
+        navigate('/');
+      } else {
+        alert('식물 정보를 저장하는 데 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Error saving data:', error.message);
+      alert('식물 정보를 저장하는 데 오류가 발생했습니다.');
+    }
+  };
+
   const goToHome = () => {
     navigate('/');
   };
 
   return (
     <div className="image-check">
-
       <div className="header">
         <img className="vector" alt="Vector" src={vector} onClick={goToHome} />
       </div>
@@ -55,7 +116,7 @@ export const ImageCheck = () => {
         <button className="random-btn" onClick={generateRandomNickname}>익명으로 등록하기</button>
       </div>
       <div className="footer">
-        <button className="save-btn">확인</button>
+        <button className="save-btn" onClick={() => { fetchLocation(); handleSave(); }}>확인</button>
       </div>
     </div>
   );
