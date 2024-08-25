@@ -156,7 +156,6 @@
   padding: 10px;
   border-bottom: 1px solid #e0e0e0;
   text-align: center; /* 중앙 정렬 */
-
 }
 
 .result-item:last-child {
@@ -169,7 +168,6 @@
   text-align: center; /* 중앙 정렬 */
   margin: 20px; /* 상하 마진 */
   font-weight: bold;
-  
 }
 
 .result-item {
@@ -200,4 +198,13 @@
 .item-description {
   font-size: 14px;
   color: #555;
+}
+
+.result-details {
+  border-radius: 15px; /* 라운드 처리 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 쉐도우 추가 */
+  padding: 25px;
+  background-color: white;
+  margin-top: 16px;
+  back-ground: #77777;
 }

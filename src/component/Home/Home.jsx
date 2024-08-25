@@ -6,8 +6,7 @@ export const Home = () => {
   const [searchType, setSearchType] = useState('nickname');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState([]);
-  const [expandedItem, setExpandedItem] = useState(null); // 현재 확장된 항목의 상태
+  const [result, setResult] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,42 +34,38 @@ export const Home = () => {
       return map;
     };
 
-    const addCurrentLocationMarker = (map) => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const userLocation = new window.naver.maps.LatLng(
-              position.coords.latitude,
-              position.coords.longitude
-            );
+    const addMarker = (map, location) => {
+      new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(location.latitude, location.longitude),
+        map: map,
+        icon: {
+          url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+          size: new window.naver.maps.Size(24, 24),
+          scaledSize: new window.naver.maps.Size(24, 24),
+        }
+      });
+    };
 
-            new window.naver.maps.Marker({
-              position: userLocation,
-              map: map,
-              icon: {
-                url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                size: new window.naver.maps.Size(24, 24),
-                scaledSize: new window.naver.maps.Size(24, 24),
-              }
-            });
+    const fetchPlantDataAndAddMarker = async (map, id) => {
+      try {
+        const response = await fetch(`http://43.203.235.174:8080/plant/${id}`);
+        const data = await response.json();
 
-            map.setCenter(userLocation);
-          },
-          (error) => {
-            console.error('현재 위치를 가져오는데 실패했습니다:', error);
-            alert('현재 위치를 가져올 수 없습니다. 기본 위치로 지도를 표시합니다.');
-          },
-          { enableHighAccuracy: true }
-        );
-      } else {
-        alert('Geolocation을 지원하지 않는 브라우저입니다.');
+        if (data.isSuccess && data.result) {
+          setResult(data.result);
+          addMarker(map, data.result);
+        } else {
+          console.error('API 응답에 문제가 있습니다:', data.message);
+        }
+      } catch (error) {
+        console.error('API 호출 중 오류 발생:', error);
       }
     };
 
     loadNaverMapScript()
       .then(() => {
         const map = initializeMap();
-        addCurrentLocationMarker(map);
+        fetchPlantDataAndAddMarker(map, 1);
       })
       .catch((err) => {
         console.error('네이버 지도 API 로드 실패:', err);
@@ -93,45 +88,34 @@ export const Home = () => {
   const handleSearch = async () => {
     if (!searchTerm) return;
 
-    const endpoint = searchType === 'plant' ? 'plantname' : 'nickname';
-    
     try {
-      const response = await fetch(`http://localhost:5001/${endpoint}?query=${searchTerm}`);
-      const data = await response.json();
-      setResults(data);
+      const encodedSearchTerm = encodeURIComponent(searchTerm);
+      const url = searchType === 'nickname'
+        ? `http://43.203.235.174:8080/plant/nickName/${encodedSearchTerm}`
+        : `http://43.203.235.174:8080/plant/${encodedSearchTerm}`;
+
+      const response = await fetch(url);
+      const textData = await response.text();
+      const data = textData ? JSON.parse(textData) : null;
+
+      if (data && data.isSuccess && data.result) {
+        setResult(data.result.plantListsDTO || []);
+      } else {
+        console.error('검색 중 오류 발생:', data ? data.message : '응답 데이터가 없습니다.');
+        setResult([]);
+      }
     } catch (error) {
       console.error('검색 중 오류 발생:', error);
-    }
-  };
-
-  const handleItemClick = async (index) => {
-    if (expandedItem === index) {
-      setExpandedItem(null); // 이미 확장된 항목을 다시 클릭하면 축소
-    } else {
-      setExpandedItem(index); // 항목을 확장
-      const endpoint = searchType === 'plant' ? 'plantname' : 'nickname';
-      
-      try {
-        const response = await fetch(`http://localhost:5001/${endpoint}/${results[index].id}`);
-        const data = await response.json();
-        setResults(prevResults => {
-          const newResults = [...prevResults];
-          newResults[index] = { ...newResults[index], ...data };
-          return newResults;
-        });
-      } catch (error) {
-        console.error('세부 정보 로드 중 오류 발생:', error);
-      }
+      setResult([]);
     }
   };
 
   return (
     <div>
-      {/* 상단 검색 박스 */}
       <div className="search-container">
         <input
           type="text"
-          placeholder={searchType === 'plant' ? '식물을 검색해 보세요!' : '닉네임을 검색해 보세요!'}
+          placeholder={searchType === 'plantName' ? '식물을 검색해 보세요!' : '닉네임을 검색해 보세요!'}
           className="search-box"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -144,7 +128,7 @@ export const Home = () => {
         </div>
         {dropdownOpen && (
           <div className="dropdown-menu">
-            <div onClick={() => handleSelect('plant')} className="dropdown-item">
+            <div onClick={() => handleSelect('plantName')} className="dropdown-item">
               식물 이름
             </div>
             <div onClick={() => handleSelect('nickname')} className="dropdown-item">
@@ -154,37 +138,27 @@ export const Home = () => {
         )}
       </div>
 
-      {/* 지도와 버튼을 포함하는 div */}
       <div className="map-container">
         <div id="map" className="small-map"></div>
-
-     
-
-        {/* 지도 오른쪽 아래에 위치한 초록색 원형 버튼 */}
         <div className="floating-button" onClick={handleNavigate}>
           +
         </div>
       </div>
-   {/* 지도와 검색 결과 리스트 사이에 추가된 텍스트 */}
-   <div className="location-text">
-          해당 위치에 있는 식물 확인하기
-        </div>
-      {/* 검색 결과 리스트 */}
-      {results.length > 0 && (
-        <div className="results-list">
-          {results.map((item, index) => (
-            <div
-              key={index}
-              className={`result-item ${expandedItem === index ? 'expanded' : ''}`}
-              onClick={() => handleItemClick(index)}
-            >
-              {searchType === 'nickname' ? item.nickname : item.name}
-              {expandedItem === index && (
-                <div className="item-details">
-                  <img src={item.imageUrl} alt={item.name || item.nickname} className="item-image" />
-                  <p>{item.description}</p>
-                </div>
-              )}
+      
+      <div className="location-text">
+        해당 위치에 있는 식물 확인하기
+      </div>
+
+      {result && result.length > 0 && (
+        <div className="result-details">
+          {result.map((plant, index) => (
+            <div key={index} className="plant-item">
+              <h3>{plant.nickName}</h3>
+              <p>{plant.plantName}</p>
+              <p>{plant.plantDescription}</p>
+              <p>질병: {plant.disease}</p>
+              <p>건강 상태: {plant.healthy ? '건강함' : '건강하지 않음'}</p>
+              <img src={plant.imageDirectory} alt={plant.plantName} />
             </div>
           ))}
         </div>
